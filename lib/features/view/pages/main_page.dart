@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:portfolio/features/data/service/launch_service.dart';
 import 'package:portfolio/features/view/pages/responsive/responsive_utils.dart';
-import 'package:portfolio/features/view/widgets/bottom_web.dart';
+import 'package:portfolio/features/view/widgets/main_page_widgets/bottom_web.dart';
 import 'package:portfolio/features/view/widgets/flout_appbar.dart';
 import 'package:portfolio/features/view/widgets/gradient_text.dart';
+import 'package:portfolio/features/view/widgets/main_page_widgets/about_me_section.dart';
+import 'package:portfolio/features/view/widgets/main_page_widgets/contant_section.dart';
+import 'package:portfolio/features/view/widgets/main_page_widgets/faq_section.dart';
 import 'package:portfolio/features/view/widgets/my_drawer.dart';
-import 'package:portfolio/features/view/widgets/my_widget.dart';
+import 'package:portfolio/features/view/widgets/main_page_widgets/image_scroll_section.dart';
 import 'package:portfolio/features/view/widgets/project_widget.dart';
+import 'package:portfolio/features/view/widgets/main_page_widgets/section_title.dart';
 
 class MainPage extends StatefulWidget {
   final String? scrollTo;
@@ -21,12 +24,35 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  // المفاتيح تم تعريفها كـ final وهي ممتازة لتحديد مكان السكرول
   final GlobalKey homeKey = GlobalKey();
   final GlobalKey aboutMeKey = GlobalKey();
   final GlobalKey projectsKey = GlobalKey();
   final GlobalKey faqKey = GlobalKey();
   final GlobalKey contactKey = GlobalKey();
-  final Widgets myWidgets = Widgets();
+
+  // تحويل الكائنات لتكون على مستوى الـ State وليس داخل الـ build لحفظ الأداء
+  final ScrollController _scrollController = ScrollController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final FloutAppbar _floutAppbar = FloutAppbar();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.scrollTo != null) {
+        _scrollToSection(widget.scrollTo!);
+      }
+    });
+  }
+
+  // تنظيف الذاكرة لمنع التسريب الـ Memory Leak
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   void scrollToKey(GlobalKey key) {
     final context = key.currentContext;
     if (context != null && mounted) {
@@ -39,19 +65,7 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (widget.scrollTo != null) {
-        _scrollToSection(widget.scrollTo!);
-      }
-    });
-  }
-
-  void _scrollToSection(
-    String section,
-  ) {
+  void _scrollToSection(String section) {
     switch (section) {
       case 'home':
         scrollToKey(homeKey);
@@ -71,44 +85,33 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
-  final ScrollController _scrollController = ScrollController();
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  void _onDrawerItemTap(GlobalKey key) {
+    _scaffoldKey.currentState?.closeDrawer();
+    scrollToKey(key);
+  }
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
+    // جلب أبعاد الشاشة المتغيرة
+    final size = MediaQuery.sizeOf(context);
+    final width = size.width;
+    final height = size.height;
+
     final isMobile = ResponsiveUtils.isMobile(context);
     final isTablet = ResponsiveUtils.isTablet(context);
-    LunchWeb lunchWeb = LunchWeb();
-    FloutAppbar floutAppbar = FloutAppbar();
+
     return Scaffold(
       key: _scaffoldKey,
+      backgroundColor: Colors.black,
       drawer: isMobile
           ? myDrawer(
-              ontapHome: () {
-                scrollToKey(homeKey);
-                _scaffoldKey.currentState?.closeDrawer();
-              },
-              ontapAbout: () {
-                _scaffoldKey.currentState?.closeDrawer();
-                scrollToKey(aboutMeKey);
-              },
-              ontapProject: () {
-                _scaffoldKey.currentState?.closeDrawer();
-                scrollToKey(projectsKey);
-              },
-              ontapFAQ: () {
-                _scaffoldKey.currentState?.closeDrawer();
-                scrollToKey(faqKey);
-              },
-              ontapContact: () {
-                _scaffoldKey.currentState?.closeDrawer();
-                scrollToKey(contactKey);
-              },
+              ontapHome: () => scrollToKey(homeKey),
+              ontapAbout: () => _onDrawerItemTap(aboutMeKey),
+              ontapProject: () => _onDrawerItemTap(projectsKey),
+              ontapFAQ: () => _onDrawerItemTap(faqKey),
+              ontapContact: () => _onDrawerItemTap(contactKey),
             )
-          : Container(),
-      backgroundColor: Colors.black,
+          : null,
       body: CustomScrollView(
         controller: _scrollController,
         slivers: [
@@ -118,7 +121,7 @@ class _MainPageState extends State<MainPage> {
             pinned: true,
             expandedHeight: 70,
             collapsedHeight: 70,
-            flexibleSpace: floutAppbar.appbar(
+            flexibleSpace: _floutAppbar.appbar(
               isMobile: isMobile,
               context: context,
               isTablet: isTablet,
@@ -132,96 +135,89 @@ class _MainPageState extends State<MainPage> {
               ontapImage: () => scrollToKey(homeKey),
               ontapMenu: () => _scaffoldKey.currentState?.openDrawer(),
             ),
-            leading: isMobile ? Container() : null,
+            leading: isMobile
+                ? const SizedBox.shrink()
+                : null, // SizedBox.shrink أفضل من Container فارغ
           ),
           SliverToBoxAdapter(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(height: isMobile ? height * 0.02 : height * 0.05),
+
+                // Name
                 GradientText(
                   key: homeKey,
-                  text: 'Tarek Almohammad',
+                  text: 'Tarek Sarhid Almohammad',
                   fontWeight: FontWeight.w500,
                   fontSize: isMobile ? 32 : (isTablet ? 48 : 62),
                 ),
+
+                // Engineer
                 GradientText(
-                  text: 'Flutter Developer',
+                  text: 'Software Engineer', // تم تصحيح الخطأ الإملائي هنا
                   fontWeight: FontWeight.w400,
                   fontSize: isMobile ? 24 : (isTablet ? 32 : 38),
                 ),
-                myWidgets.buildImageScrollSection(width, height, context),
-                Padding(
-                  key: aboutMeKey,
-                  padding: EdgeInsets.only(
-                    left: width / 20,
-                    top: isMobile ? 70 : (isTablet ? 80 : 100),
-                    bottom: isMobile ? 25 : (isTablet ? 30 : 35),
-                  ),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: GradientText(
-                      text: 'About Me',
-                      fontWeight: FontWeight.w500,
-                      fontSize: isMobile ? 24 : (isTablet ? 30 : 38),
-                    ),
-                  ),
+
+                ImageScrollSection(width: width, height: height),
+
+                // About Me Section
+                SectionTitle(
+                  sectionKey: aboutMeKey,
+                  title: 'About Me',
+                  width: width,
+                  isMobile: isMobile,
+                  isTablet: isTablet,
                 ),
-                myWidgets.buildAboutMeSection(
-                    context, width, isMobile, isTablet),
+                AboutMeSection(
+                    height: height,
+                    width: width,
+                    isMobile: isMobile,
+                    isTablet: isTablet),
+
                 // Projects Section
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: width / 20,
-                    top: isMobile ? 70 : (isTablet ? 80 : 100),
-                    bottom: isMobile ? 25 : (isTablet ? 30 : 35),
-                  ),
-                  child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: GradientText(
-                        key: projectsKey,
-                        text: 'My Latest Projects',
-                        fontSize: isMobile ? 24 : (isTablet ? 30 : 38),
-                        fontWeight: FontWeight.w500,
-                      )),
+                SectionTitle(
+                  sectionKey: projectsKey,
+                  title: 'My Latest Projects',
+                  width: width,
+                  isMobile: isMobile,
+                  isTablet: isTablet,
                 ),
                 ProjectWidget(width: width, height: height),
+
                 // FAQ Section
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: width / 20,
-                    top: isMobile ? 70 : (isTablet ? 80 : 100),
-                    bottom: isMobile ? 25 : (isTablet ? 30 : 35),
-                  ),
-                  child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: GradientText(
-                        key: faqKey,
-                        text: 'Frequently asked questions',
-                        fontSize: isMobile ? 24 : (isTablet ? 30 : 38),
-                        fontWeight: FontWeight.w500,
-                      )),
+                SectionTitle(
+                  sectionKey: faqKey,
+                  title: 'Frequently asked questions',
+                  width: width,
+                  isMobile: isMobile,
+                  isTablet: isTablet,
                 ),
-                myWidgets.buildFaqSection(height, width, isMobile),
+                FaqSection(height: height, width: width, isMobile: isMobile),
+
                 // Contact Section
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: width / 20,
-                    top: isMobile ? 55 : (isTablet ? 70 : 100),
-                    bottom: isMobile ? 20 : (isTablet ? 30 : 35),
-                  ),
-                  child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: GradientText(
-                        key: contactKey,
-                        text: 'Contact Me',
-                        fontSize: isMobile ? 24 : (isTablet ? 32 : 38),
-                        fontWeight: FontWeight.w500,
-                      )),
+                SectionTitle(
+                  sectionKey: contactKey,
+                  title: 'Contact Me',
+                  width: width,
+                  isMobile: isMobile,
+                  isTablet: isTablet,
+                  customTopPadding: isMobile
+                      ? 55
+                      : (isTablet
+                          ? 70
+                          : 100), // تخصيص البادينج المختلف للكونتاكت
                 ),
-                myWidgets.buildContactSection(
-                    height, width, context, lunchWeb, isMobile, isTablet),
+                ContantSection(
+                    height: height,
+                    width: width,
+                    isMobile: isMobile,
+                    isTablet: isTablet),
+
                 SizedBox(height: isMobile ? height * 0.05 : height * 0.13),
+
+                // Bottom Section
                 BottomWeb(
                   height: height,
                   isMobile: isMobile,
@@ -232,7 +228,7 @@ class _MainPageState extends State<MainPage> {
                   onTapFAQ: () => scrollToKey(faqKey),
                   onTapContact: () => scrollToKey(contactKey),
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
               ],
             ),
           ),

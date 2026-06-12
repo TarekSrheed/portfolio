@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:portfolio/features/data/service/launch_service.dart';
+import 'package:portfolio/features/view/pages/cubit/portfolio_cubit/portfolio_cubit.dart';
 import 'package:portfolio/features/view/pages/main_page.dart';
 import 'package:flutter/gestures.dart';
 
@@ -13,15 +16,18 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'portfolio',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return BlocProvider(
+      create: (context) => PortfolioCubit(LunchWeb()),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'portfolio',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        home: const MainPage(),
+        scrollBehavior: MyCustomScrollBehavior(),
       ),
-      home: MainPage(),
-      scrollBehavior: MyCustomScrollBehavior(),
     );
   }
 }

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:portfolio/core/res/app_style.dart';
-import 'package:portfolio/features/data/service/launch_service.dart';
+import 'package:portfolio/features/view/pages/cubit/portfolio_cubit/portfolio_cubit.dart';
+import 'package:portfolio/features/view/widgets/auto_scroll_slider.dart';
 import 'package:portfolio/features/view/pages/main_page.dart';
-import 'package:portfolio/features/view/pages/page_view.dart';
 import 'package:portfolio/features/view/pages/responsive/responsive_utils.dart';
-import 'package:portfolio/features/view/widgets/bottom_web.dart';
+import 'package:portfolio/features/view/widgets/main_page_widgets/bottom_web.dart';
 import 'package:portfolio/features/view/widgets/flout_appbar.dart';
 import 'package:portfolio/features/view/widgets/gradient_text.dart';
 import 'package:portfolio/features/view/widgets/my_drawer.dart';
@@ -25,7 +26,6 @@ class ProjectsPage extends StatelessWidget {
     required this.url,
     required this.contant,
   });
-  final LunchWeb lunchWeb = LunchWeb();
   Map<String, String> parseSections(String content) {
     final sections = <String, String>{};
     final lines = content.split('\n');
@@ -61,16 +61,18 @@ class ProjectsPage extends StatelessWidget {
     );
   }
 
+  final FloutAppbar floutAppbar = FloutAppbar();
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     final isMobile = ResponsiveUtils.isMobile(context);
     final isTablet = ResponsiveUtils.isTablet(context);
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
+    final size = MediaQuery.sizeOf(context);
+    final width = size.width;
+    final height = size.height;
     final sections = parseSections(contant);
-    FloutAppbar floutAppbar = FloutAppbar();
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -98,7 +100,7 @@ class ProjectsPage extends StatelessWidget {
                 navigator(context, 'contact');
               },
             )
-          : Container(),
+          : null,
       body: Stack(
         children: [
           CustomScrollView(
@@ -231,7 +233,9 @@ class ProjectsPage extends StatelessWidget {
                     ),
                     child: TextButton(
                         onPressed: () {
-                          lunchWeb.openWebsite(context, Uri.parse(url));
+                          context
+                              .read<PortfolioCubit>()
+                              .openSocialLink(context, url);
                         },
                         child: GradientText(
                           text: 'Link To Project',

@@ -10,6 +10,20 @@ List<Map<String, dynamic>> projects = [
     'images': rideImages,
   },
   {
+    'name': 'Flight Booking App',
+    'photo': flight_logo,
+    'contant': flightBookingContant,
+    'url': 'https://github.com/TarekSrheed/flight_app',
+    'images': flightImages,
+  },
+  {
+    'name': 'Field Collect Application',
+    'photo': field_collect_logo,
+    'contant': fieldCollectContant,
+    'url': 'https://github.com/TarekSrheed',
+    'images': field_collect_Images,
+  },
+  {
     'name': 'Global News Application',
     'photo': logoNews,
     'contant': newsContent,

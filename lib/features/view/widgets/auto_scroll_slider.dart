@@ -76,7 +76,9 @@ class _AutoScrollSliderState extends State<AutoScrollSlider> {
               },
               itemBuilder: (context, index) {
                 return Padding(
-                  padding: const EdgeInsets.only(right: 3, left: 3),
+                  padding: EdgeInsets.only(
+                      right: widget.isMobile ? 1 : 2,
+                      left: widget.isMobile ? 1 : 2),
                   child: Image.asset(
                     widget.images[index],
                     cacheWidth: (MediaQuery.of(context).size.width * 2).toInt(),

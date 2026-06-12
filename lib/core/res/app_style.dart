@@ -51,7 +51,7 @@ TextStyle nameParagraphStyle = TextStyle(
 );
 TextStyle contentStyle = TextStyle(
   fontWeight: FontWeight.w400,
-  fontSize: 20,
+  fontSize: 17,
   color: whiteColor,
 );
 TextStyle content1Style = TextStyle(

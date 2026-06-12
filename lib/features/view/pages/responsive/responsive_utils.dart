@@ -8,6 +8,7 @@ class ResponsiveUtils {
       MediaQuery.of(context).size.width < 1200;
   static bool isDesktop(BuildContext context) =>
       MediaQuery.of(context).size.width >= 1200;
+
   static double getResponsiveFontSize(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     if (isMobile(context)) return width * 0.04;

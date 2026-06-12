@@ -4,11 +4,9 @@ import 'package:portfolio/core/res/app_colors.dart';
 Container containerItem(BuildContext context,
     {required double height,
     required double width,
-
     required List<Widget> children}) {
   return Container(
-    padding: const EdgeInsets.all(20),
-   
+    padding: const EdgeInsets.all(18),
     height: height,
     width: width,
     decoration: BoxDecoration(

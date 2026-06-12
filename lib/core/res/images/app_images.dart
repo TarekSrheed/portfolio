@@ -1,7 +1,5 @@
 // ignore_for_file: non_constant_identifier_names
 
-import 'dart:math';
-
 String chatHome = 'assets/images/chat_home.jpg';
 String rideHome = 'assets/images/home_electron.jpg';
 String noteHome = 'assets/images/home_page_notes.png';
@@ -15,6 +13,8 @@ String logoForms = 'assets/images/logo_forms.png';
 String logoNote = 'assets/images/logo_note.png';
 String logoChat = 'assets/images/logo_chat.jpg';
 String logo = 'assets/images/untitled_design.png';
+String flight_logo = 'assets/images/flight_logo.png';
+String field_collect_logo = 'assets/images/field_collect_logo.png';
 String phoneCover = 'assets/images/phone_cover.png';
 
 // ride_images
@@ -51,7 +51,68 @@ final List rideImages = [
   current,
   complitedRides,
   profile,
-  edit,
+  edit
+];
+// flight Images
+String splash_page = "assets/images/flight_images/splash_page.png";
+String booking_page = "assets/images/flight_images/booking_page.png";
+String home_page = "assets/images/flight_images/home_page.png";
+String checkIn_page = "assets/images/flight_images/check_in_page.png";
+String drower_page = "assets/images/flight_images/drower.png";
+String enter_date_page = "assets/images/flight_images/enter_date_page.png";
+String enter_traveller_page =
+    "assets/images/flight_images/enter_traveller_page.png";
+String flight_status_page =
+    "assets/images/flight_images/flight_status_page.png";
+String my_trips_page = "assets/images/flight_images/my_trips_page.png";
+String onbording_one_page = "assets/images/flight_images/onbording_one.png";
+String onbording_two_page = "assets/images/flight_images/onbording_two.png";
+String onbording_three_page = "assets/images/flight_images/onbording_three.png";
+String profile_page = "assets/images/flight_images/profile_page.png";
+String search_result_page =
+    "assets/images/flight_images/search_result_page.png";
+String settings_page = "assets/images/flight_images/settings_page.png";
+final List flightImages = [
+  splash_page,
+  onbording_one_page,
+  onbording_two_page,
+  onbording_three_page,
+  home_page,
+  booking_page,
+  enter_date_page,
+  enter_traveller_page,
+  search_result_page,
+  drower_page,
+  checkIn_page,
+  my_trips_page,
+  flight_status_page,
+  settings_page,
+  profile_page
+];
+//Field_collect
+String form_one = "assets/images/fleild_collect_images/form_one.jpg";
+String form_Two = "assets/images/fleild_collect_images/form_two.jpg";
+String form_three = "assets/images/fleild_collect_images/form_three.jpg";
+String forms_page = "assets/images/fleild_collect_images/forms_page.jpg";
+String home_field_page = "assets/images/fleild_collect_images/home_page.jpg";
+String my_account_page =
+    "assets/images/fleild_collect_images/my_account_page.jpg";
+String send_forms_page =
+    "assets/images/fleild_collect_images/send_forms_page.jpg";
+String splash_field_page =
+    "assets/images/fleild_collect_images/splash_page.jpg";
+String settings_field_page =
+    "assets/images/fleild_collect_images/settings_page.jpg";
+final List field_collect_Images = [
+  splash_field_page,
+  home_field_page,
+  forms_page,
+  form_one,
+  form_Two,
+  form_three,
+  send_forms_page,
+  my_account_page,
+  settings_field_page
 ];
 
 // note images
@@ -70,7 +131,7 @@ final List noteImages = [
   homeScreen,
   homeScreenEmpty,
   homeScreen1,
-  searchingNote,
+  searchingNote
 ];
 
 // News App Images
@@ -87,7 +148,7 @@ final List newsImages = [
   homePageImage,
   searchPageImage,
   savedPageImage,
-  accountImage,
+  accountImage
 ];
 
 // Forms App Images
@@ -106,7 +167,7 @@ final List formsImages = [
   homeFormImage,
   questionsFormImage,
   prizeFormImage,
-  logoutFormImage,
+  logoutFormImage
 ];
 
 // Chat App Images
@@ -139,5 +200,5 @@ final List chatImages = [
   suggestedImage,
   categoriesChatImage,
   itemImage,
-  logoutChatImage,
+  logoutChatImage
 ];
